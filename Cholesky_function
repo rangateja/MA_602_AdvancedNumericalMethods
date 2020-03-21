@@ -1,0 +1,30 @@
+function [L,U] = cholskey(A)
+%% created By RangaTeja (4 Feb 2020) Ref: Prof.Joshi Notes
+n = size(A,1);
+L = zeros(n);
+%% finding first row first element of L matrix which is L_11 = sqrt(a_11))
+L(1,1) = sqrt(A(1,1));
+%% Now finding L_21, L_31, and soon as L_j1 = a_j1/L_11
+for j = 2:n
+    L(j,1) = A(j,1)/L(1,1);
+end
+
+%% 
+for j = 2:n
+        sum1 = 0;
+        for m = 1:j-1
+            sum1 = sum1 + L(j,m)^2;
+        end
+        L(j,j) = sqrt(A(j,j)-sum1);
+
+%% 
+    for p = j+1:n
+        sum2 = 0;
+        for m = 1:j-1
+            sum2 = sum2 + L(j,m)*L(p,m);
+        end
+        L(p,j) = (A(p,j)-sum2)/L(j,j);
+    end
+end
+U = L'; 
+end
