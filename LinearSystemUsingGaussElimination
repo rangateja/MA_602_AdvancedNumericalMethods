@@ -1,0 +1,56 @@
+%% Q2
+%% Solved by Dr. Raghavan Ranganathan, Ranga Teja
+clc
+clear
+close
+
+a = [1 2 -1 1; 0 1 1 1; 1 1 1 1;-1 2 0 1];
+n = size(a,2);
+b = eye(n);
+
+if det(a)== 0 % if det is zero, we cant find the solution
+    print('Can''t evaluate the linear system')
+else
+
+    for k = 1 : n-1 % Need to iterate over n-1 steps
+        for i = k+1 : n
+            m(i,k) = a(i,k)/a(k,k); % Define the multipliers
+        end
+        
+        for i = k+1 : n
+            for j = k : n
+                a(i,j) = a(i,j) - m(i,k)*a(k,j);
+            end
+        end
+        
+        for i = 1 : n
+            for j = 1 : n
+                b(i,j) = b(i,j) - m(i,k)*b(k,j);
+            end
+        end
+%      a
+%      b
+%     pause
+    end
+end
+
+%% Backward substitution:
+x = zeros(n,n); % variable to store the inverse
+
+for j = 1 : n
+    x(n,j) = b(n,j)/a(n,n);
+end
+
+for k = 1 : n % Repeat for k columns of the transformed 'b' Identity matrix
+    for i = n-1 : -1 : 1
+        rsum = 0;
+        for j = i+1 : n
+            rsum = rsum + a(i,j)*x(j,k);
+        end
+        x(i,k) = (b(i,k)-rsum)/a(i,i);
+    end
+end
+
+% Check for correctness:
+a = [1 2 -1 1; 0 1 1 1; 1 1 1 1;-1 2 0 1];
+x - inv(a)
