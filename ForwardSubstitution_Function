@@ -1,0 +1,13 @@
+function y = forward_sub(b,L)
+%% created by RangaTeja ( 4 Feb 2020)
+y(1) = b(1)/L(1,1);
+n = size(L,1);
+for i = 2:n
+    sum1 = 0;
+    for j = 1:i-1
+        sum1 = sum1+ L(i,j)*y(j);
+    end
+    y(i) = (b(i)-sum1)/L(i,i);
+end
+y = y';
+end
