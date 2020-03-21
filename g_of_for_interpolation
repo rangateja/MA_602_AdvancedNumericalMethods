@@ -1,0 +1,3 @@
+function g_x = g_of(x)
+    g_x = 1/(1+x^2);
+end
