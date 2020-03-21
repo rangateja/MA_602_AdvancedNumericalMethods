@@ -1,0 +1,29 @@
+function [L,U] = doolittle(A)
+%% created by RangaTeja ( 5 Feb 2020) Ref: Prof Joshi's Notes
+n = size(A,1);
+L = eye(n);
+U = zeros(n);q6
+for k = 1:n
+    U(1,k) = A(1,k);
+end
+for j = 2:n
+    L(j,1) = A(j,1)/A(1,1);
+end
+for j = 2:n
+    for k = j:n
+        sum2 = 0;
+        for l = 1:j-1
+            sum2 = sum2 + L(j,l)*U(l,k);
+        end
+        U(j,k) = A(j,k) -sum2;
+    end
+    k = j;
+    for j = k+1:n
+        sum1 = 0;
+        for l = 1:k-1
+            sum1 = sum1 + L(j,l)*U(l,k);
+        end
+        L(j,k) = (A(j,k)-sum1)/U(k,k);
+    end
+end
+end
