@@ -1,0 +1,56 @@
+clear all
+%% solved by Ranga Teja(25 Feb 2020) Discussion: Kushpal Yadhav, Prof. Mohan Joshi
+tolerance = 10^-80;
+syms N;
+eqn = log(1/tolerance)== log(2^N)+(N+1)*log(N+1)-(N+1); %used striling approximation for factorial solving
+degree = double(solve(eqn,N));
+n = round(degree+1); % No.of interpolating points
+%% finding interpolating points from chebyshev formulation
+for k = 1:n
+    x(k) = cos(((2*(k-1)+1)*pi)/(2*(n+1)));
+    g_x(k) = g_of(x(k));
+end
+%% To find the finite difference table call function fin_differ_table
+fdt1 = fin_differ_table(n,x,g_x);   
+%% interpolating polynomial equation generation ( logic borrowed from Kusphal Yadhav)
+syms X;
+pn_x1 = fdt1(1,2);
+product = X-fdt1(1,1);
+for i = 3:n+1
+    pn_x1 = pn_x1 + product*fdt1(1,i);
+    product = product*(X-fdt1(i-1,1));
+    
+end
+%% plot comparisons
+%give function directly
+x_general = -1:0.00001:1;
+for i = 1:200001
+g_x_general(i) = g_of(x_general(i));
+end
+figure(1);
+plot(x_general,g_x_general)
+
+%x points generated equidistantly from [-1,1]
+x_equidistant = linspace(-1,1,n);
+for i = 1:n
+g_x_equidistant(i) = g_of(x_equidistant(i));
+end
+fdt2 = fin_differ_table(n,x_equidistant,g_x_equidistant);
+syms X;
+pn_x2 = fdt2(1,2);
+product = X-fdt2(1,1);
+for i = 3:n+1
+    pn_x2 = pn_x2 + product*fdt2(1,i);
+    product = product*(X-fdt2(i-1,1));
+    
+end
+g_x_equi = double(subs(pn_x2,X,x_equidistant));
+figure(2);
+plot(x_equidistant,g_x_equi)    
+
+% x points from chebyshev approximation
+x;
+g_x_chebyshev = double(subs(pn_x1,X,x));
+figure(3);
+plot(x,g_x_chebyshev)
+   
