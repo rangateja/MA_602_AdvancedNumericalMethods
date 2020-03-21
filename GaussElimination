@@ -1,0 +1,48 @@
+%% Q1 
+%% Coded By Dr. Raghavan Ranganathan, Ranga Teja 
+clc
+clear
+close
+
+a = [4 1 -1 0 0 0 0 0; 1 6 -2 1 -1 0 0 0; 0 1 5 0 -1 1 0 0; 0 2 0 5 -1 0 -1 -1; 0 0 -1 -1 6 -1 0 -1; 0 0 -1 0 -1 5 0 0; 0 0 0 -1 0 0 4 -1; 0 0 0 -1 -1 0 -1 5];
+b = [3 -6 -5 0 12 -12 -2 2]'; % column vector
+
+%% Matlab way of solving the linear system
+x_direct = a \ b;
+n = size(c,1);
+m = zeros(n,n); % Matrix containing multipliers
+
+if det(a) == 0
+    print('Can''t evaluate the linear system')
+else
+    for k = 1 : n-1 % Need to iterate over n-1 steps
+        
+        for i = k+1 : n
+            m(i,k) = a(i,k)/a(k,k); % Define the multipliers
+        end
+        
+        for i = k+1 : n
+            for j = k : n
+                a(i,j) = a(i,j) - m(i,k)*a(k,j);
+            end
+            b(i) = b(i) - m(i,k)*b(k);
+        end
+        
+    end
+end
+
+%% Backward substitution:
+
+x(n) = b(n)/a(n,n);
+    for i = n-1 : -1 : 1
+        rsum = 0;
+        for j = i+1 : n
+            rsum = rsum + a(i,j)*x(j);
+        end
+        x(i) = (b(i)-rsum)/a(i,i);
+    end
+    
+ %% compare the solutions:
+ 
+ x_direct - x
+ 
